@@ -12,6 +12,7 @@ require('dotenv').config();
 require("./models/index.js");
 
 var indexRouter = require('./routes/index');
+const userAuth = require('./routes/auth');
 
 var app = express();
 // Middleware pour gérer CORS
@@ -25,6 +26,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use('/api', indexRouter);
+app.use('/api/auth', userAuth);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

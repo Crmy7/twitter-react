@@ -1,16 +1,12 @@
 const sequelize = require("./_database");
 const { DataTypes } = require("sequelize");
+const User = require("./User");
 
 const Post = sequelize.define("Post", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
-  },
-
-  title: {
-    type: DataTypes.STRING,
-    allowNull: false,
   },
 
   content: {
@@ -23,9 +19,13 @@ const Post = sequelize.define("Post", {
     allowNull: true,
   },
 
-  author: {
-    type: DataTypes.STRING,
-    allowNull: false,
+  UserId: {
+    type: DataTypes.INTEGER,
+    allowNull: false, // Assurez-vous que chaque post est lié à un utilisateur
+    references: {
+      model: User,
+      key: "id",
+    },
   },
 });
 

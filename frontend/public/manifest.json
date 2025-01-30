@@ -1,0 +1,13 @@
+{
+    "name": "Mini Twitter",
+    "short_name": "Mini Twitter",
+    "start_url": "/",
+    "icons": [{
+        "src": "/icons/Logo_of_Twitter_144_144.png",
+        "sizes": "144x144",
+        "type": "image/png",
+        "purpose": "any"
+    }],
+    "display": "standalone",
+    "id": "com.mini-twitter"
+}
