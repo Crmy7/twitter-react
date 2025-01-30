@@ -1,6 +1,5 @@
 const Post = require("../../models/Post");
 
-// Ajouter un post avec UserId et imageUrl seulement
 module.exports = async (req, res) => {
   try {
     if (!req.body.content) {
@@ -9,8 +8,8 @@ module.exports = async (req, res) => {
 
     const post = await Post.create({
       content: req.body.content,
-      imageUrl: req.body.imageUrl || null, // Image optionnelle
-      UserId: req.userId, // Utilisation de l'ID utilisateur
+      imageUrl: req.body.imageUrl || null,
+      UserId: req.userId,
     });
 
     res.status(201).json(post);

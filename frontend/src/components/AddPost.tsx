@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext";
-import axios from "axios";
+import { createPost } from "../services/api"; // ✅ Importation correcte
 
 interface AddPostProps {
   onPostAdded: () => void; // Déclaration de la prop pour notifier un ajout
@@ -9,7 +8,6 @@ interface AddPostProps {
 const AddPost: React.FC<AddPostProps> = ({ onPostAdded }) => {
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState("");
-  const { token } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -26,29 +24,28 @@ const AddPost: React.FC<AddPostProps> = ({ onPostAdded }) => {
       return;
     }
 
-    try {
-      await axios.post(
-        "http://localhost:2000/api/posts",
-        {
-          content,
-          imageUrl: imageUrl.trim() ? imageUrl : defaultImage,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+    console.log("📤 Tentative d'ajout d'un post...");
 
-      setSuccess("Post créé avec succès !");
+    try {
+      const result = await createPost({
+        content,
+        imageUrl: imageUrl.trim() ? imageUrl : defaultImage,
+      });
+
+      if (result.message === "Post sauvegardé hors ligne et sera synchronisé plus tard.") {
+        console.warn("📂 Post enregistré en local (IndexedDB)");
+        setSuccess("📂 Post sauvegardé hors ligne !");
+      } else {
+        console.log("✅ Post créé avec succès !");
+        setSuccess("Post créé avec succès !");
+      }
+
       setContent("");
       setImageUrl("");
-      onPostAdded(); // Appelle la fonction pour rafraîchir les posts
+      onPostAdded(); // Rafraîchit les posts après ajout
     } catch (error: any) {
-      setError(
-        error.response?.data?.message || "Échec de la publication du post."
-      );
+      console.error("❌ Erreur lors de la publication :", error);
+      setError(error.response?.data?.message || "Échec de la publication du post.");
     }
   };
 
